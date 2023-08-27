@@ -1,0 +1,56 @@
+# Improve readability of numbers in your JavaScript code
+
+Quite a common situation to have big numbers in JavaScript code e.g. during working with timestamps, intervals, timeouts, milliseconds:
+
+```js
+// 1 minute interval
+setInterval(() => {}, 60000);
+
+// 10 sec timeout
+setTimeout(() => {}, 10000);
+
+// current time - 5 mins
+const past5mins = Date.now() - 300000;
+
+// prices
+const maxPriceUsd = 100000.00;
+```
+
+These big numbers readability can be improved in several ways.
+
+## JavaScript Numeric Separator (_)
+
+In places where it is clear that number is milliseconds and it's some common time interval e.g. 1 minute or seconds under minute or the value can be understandable quickly without additional calculation - it is possible to utilize a **JavaScript Numeric Separator**. So the examples above will look like this:
+
+```js
+// 1 minute interval
+setInterval(() => {}, 60_000);
+
+// 10 sec timeout
+setTimeout(() => {}, 10_000);
+
+// prices
+const maxPriceUsd = 100_000.00;
+```
+
+**JavaScript Numeric Separators** were added in ES2021 and currently supported by all modern browsers and available in Node.js v12.5.0 and later.
+
+## Move uncommon time intervals to separate lib/variable
+
+For some cases it is better to replace big number with in-place calculation or separate constant.
+
+For this example:
+```js
+const past5mins = Date.now() - 300000;
+```
+
+we can improve it in next ways:
+
+```js
+// variant 1 - in-place calculation
+const past5mins = Date.now() - 5 * 60 * 1000;
+
+// variant 2 - separate constant
+const FIVE_MINS = 5 * 60 * 1000;
+const past5mins = Date.now() - FIVE_MINS;
+```

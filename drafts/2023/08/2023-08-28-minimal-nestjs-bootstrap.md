@@ -16,7 +16,7 @@ To cover these requirements usually it is required to pull a bunch of additional
 
 I've created a repo with working example of Nest.js application covering all the items above, take a look - <a href="https://github.com/rodion-arr/nestjs-starter-kit/" target="_blank">nestjs-starter-kit</a>.
 
-Lets go over these requirements and see how they are solved in `nestjs-starter-kit`.
+Let's go over these requirements and see how they are solved in `nestjs-starter-kit`.
 
 ## Docker setup
 

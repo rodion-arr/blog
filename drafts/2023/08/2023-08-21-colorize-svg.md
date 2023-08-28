@@ -6,7 +6,7 @@ Let's look on example:
 
 ![Carousel](https://github.com/rodion-arr/rodion-arr/assets/5843270/a7342539-e35c-47a0-8243-f731f0e07df9 "Carousel example")
 
-Here we have a typical carousel component with arrows navigation. In rest state the arrow is grey, on hover - it changes its color to another. CSS beginners may want to just export 2 different SVGs: white one and blue one - and put it in CSS as 2 different SVG files. But lets think about this idea more deeply.
+Here we have a typical carousel component with arrows navigation. In rest state the arrow is grey, on hover - it changes its color to another. CSS beginners may want to just export 2 different SVGs: white one and blue one - and put it in CSS as 2 different SVG files. But let's think about this idea more deeply.
 
 ## Why duplicating SVGs is bad idea
 

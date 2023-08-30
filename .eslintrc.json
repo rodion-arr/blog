@@ -1,12 +1,23 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "plugin:jsx-a11y/strict"
-  ],
-  "plugins": ["jsx-a11y"],
-  "rules": {
-    "semi": ["error", "always"],
-    "no-unused-vars": "error",
-    "@next/next/no-img-element": 0
-  }
+  "overrides": [
+    {
+      "files": ["*.js", "*.ts", "*.tsx"],
+      "extends": [
+        "next/core-web-vitals",
+        "plugin:jsx-a11y/strict"
+      ],
+      "plugins": ["jsx-a11y"],
+      "rules": {
+        "semi": ["error", "always"],
+        "no-unused-vars": "error",
+        "@next/next/no-img-element": 0
+      }
+    },
+    {
+      "files": ["*.mdx"],
+      "extends": [
+        "plugin:mdx/recommended"
+      ]
+    }
+  ]
 }

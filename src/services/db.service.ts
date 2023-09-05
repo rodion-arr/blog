@@ -1,11 +1,11 @@
-import { readFile, readdir } from "fs/promises";
+import { readFile, readdir } from 'fs/promises';
 import { join } from 'node:path';
-import { evaluate } from "@mdx-js/mdx";
-import * as runtime from "react/jsx-runtime";
-import remarkFrontmatter from "remark-frontmatter";
-import rehypeHighlight from "rehype-highlight";
+import { evaluate } from '@mdx-js/mdx';
+import * as runtime from 'react/jsx-runtime';
+import remarkFrontmatter from 'remark-frontmatter';
+import rehypeHighlight from 'rehype-highlight';
 import yaml from 'js-yaml';
-import {PostMeta} from "@/types/post-meta";
+import { PostMeta } from '@/types/post-meta';
 
 export const DbService = {
   async getPostsMeta() {
@@ -38,21 +38,27 @@ export const DbService = {
     const mdx = await readFile(`${process.cwd()}${postPath}`, 'utf-8');
 
     // TODO TOC
-    return  (await evaluate(mdx, {
-      ...runtime as any,
-      remarkPlugins: [remarkFrontmatter],
-      rehypePlugins: [rehypeHighlight],
-      development: false,
-    })).default;
+    return (
+      await evaluate(mdx, {
+        ...(runtime as any),
+        remarkPlugins: [remarkFrontmatter],
+        rehypePlugins: [rehypeHighlight],
+        development: false,
+      })
+    ).default;
   },
 
   async walk(dirPath: string): Promise<string[]> {
-    return (await Promise.all(
-      await readdir(dirPath, { withFileTypes: true }).then((entries) => entries.map((entry) => {
-        const childPath = join(dirPath, entry.name);
-        return entry.isDirectory() ? this.walk(childPath) : childPath;
-      }))
-    )).flat();
+    return (
+      await Promise.all(
+        await readdir(dirPath, { withFileTypes: true }).then((entries) =>
+          entries.map((entry) => {
+            const childPath = join(dirPath, entry.name);
+            return entry.isDirectory() ? this.walk(childPath) : childPath;
+          }),
+        ),
+      )
+    ).flat();
   },
 
   parseFrontMatter(mdContent: string): PostMeta | null {

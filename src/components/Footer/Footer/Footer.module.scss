@@ -1,0 +1,11 @@
+@use '@/styles/breakpoints';
+@use '@/styles/svg';
+
+.footer {
+
+}
+
+@include breakpoints.bp-2 {
+  .footer {
+  }
+}

@@ -1,0 +1,31 @@
+@use '@/styles/svg';
+
+.social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  & > *, img {
+    height: 32px;
+  }
+
+  &__link {
+    width: 32px;
+    background: var(--dark-grey);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & span {
+      content: '';
+      display: block;
+      width: 16px;
+      height: 16px;
+      background: var(--primary-text-color);
+
+      @include svg.mask(var(--social-img));
+    }
+  }
+}

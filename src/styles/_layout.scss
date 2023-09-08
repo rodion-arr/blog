@@ -1,0 +1,31 @@
+@use 'breakpoints';
+
+.page {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 12px;
+}
+
+@include breakpoints.bp-1 {
+  .page {
+    max-width: 540px;
+  }
+}
+
+@include breakpoints.bp-2 {
+  .page {
+    max-width: 720px;
+  }
+}
+
+@include breakpoints.bp-3 {
+  .page {
+    max-width: 960px;
+  }
+}
+
+@include breakpoints.bp-4 {
+  .page {
+    max-width: 1140px;
+  }
+}

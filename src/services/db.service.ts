@@ -6,11 +6,18 @@ import remarkFrontmatter from 'remark-frontmatter';
 import rehypeHighlight from 'rehype-highlight';
 import yaml from 'js-yaml';
 import { PostMeta } from '@/types/post-meta';
+import { DbPostsMeta } from '@/types/db-posts-meta';
 
 export const DbService = {
-  async getPostsMeta() {
+  postsMetaMemo: null as DbPostsMeta | null,
+
+  async getPostsMeta(): Promise<DbPostsMeta> {
+    if (this.postsMetaMemo) {
+      return this.postsMetaMemo;
+    }
+
     const allTags = new Set<string>();
-    const postsMeta: PostMeta[] = [];
+    const postsMeta: Record<string, PostMeta> = {};
 
     // TODO change to content/posts
     const posts = await this.walk(`${process.cwd()}/content/drafts`);
@@ -21,17 +28,22 @@ export const DbService = {
       if (meta) {
         meta.tags.forEach((tag: string) => allTags.add(tag));
 
-        postsMeta.push({
+        postsMeta[meta.slug] = {
           ...meta,
           datePublished: new Date(meta.datePublished),
-        });
+        };
       }
     }
 
-    return {
+    const result = {
       posts: postsMeta,
       tags: Array.from(allTags),
     };
+
+    // memoize
+    this.postsMetaMemo = result;
+
+    return result;
   },
 
   async getPostContent(postPath: string) {

@@ -1,0 +1,5 @@
+@mixin border {
+  border-radius: 12px;
+  border: 1px solid var(--grey);
+  padding: 16px;
+}

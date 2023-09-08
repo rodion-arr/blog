@@ -1,0 +1,26 @@
+@use '@/styles/presets';
+
+.menu {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  row-gap: 12px;
+  flex-wrap: wrap;
+  list-style: none;
+  margin-bottom: 24px;
+
+  @include presets.border;
+
+  &__item {
+    color: var(--primary-text-color);
+
+    * {
+      text-decoration: none;
+    }
+  }
+
+  &__active-link {
+    text-decoration: underline;
+    font-weight: 700;
+  }
+}

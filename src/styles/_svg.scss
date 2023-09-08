@@ -1,0 +1,10 @@
+@mixin mask($imgUrl) {
+  mask-image: $imgUrl;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  mask-position: center;
+}
+
+@mixin mask-reset {
+  mask-image: none;
+}

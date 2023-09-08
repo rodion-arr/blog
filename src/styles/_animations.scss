@@ -1,0 +1,5 @@
+@mixin color-transition {
+  transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out;
+}

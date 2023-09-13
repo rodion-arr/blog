@@ -5,4 +5,5 @@ export type PostMeta = {
   tags: string[];
   category: string;
   datePublished: Date;
+  path: string;
 };

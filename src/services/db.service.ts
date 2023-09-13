@@ -10,6 +10,8 @@ import { DbPostsMeta } from '@/types/db-posts-meta';
 import { CategoryPosts } from '@/types/category-posts';
 import { UrlService } from '@/services/url.service';
 import { categories } from '@/constants';
+import { DbCategory } from '@/types/db-category';
+import { DbPost } from '@/types/db-post';
 
 export const DbService = {
   postsMetaMemo: null as DbPostsMeta | null,
@@ -34,6 +36,7 @@ export const DbService = {
         postsMeta[meta.slug] = {
           ...meta,
           datePublished: new Date(meta.datePublished),
+          path: postPath,
         };
       }
     }
@@ -73,7 +76,7 @@ export const DbService = {
   },
 
   async getPostContent(postPath: string) {
-    const mdx = await readFile(`${process.cwd()}${postPath}`, 'utf-8');
+    const mdx = await readFile(postPath, 'utf-8');
 
     // TODO TOC
     return (
@@ -107,5 +110,45 @@ export const DbService = {
     }
 
     return null;
+  },
+
+  async getPost(slug: string): Promise<DbPost> {
+    const posts = await this.getPostsMeta();
+
+    const post = posts.posts[slug];
+
+    console.log(post.path);
+
+    return {
+      meta: post,
+      content: await this.getPostContent(post.path),
+    };
+  },
+
+  getCategoriesRaw() {
+    return categories;
+  },
+
+  getCategorySlugs(): string[] {
+    return DbService.getCategoriesRaw().map((category) => category.slug);
+  },
+
+  getCategoryBySlug(slug: string): DbCategory {
+    return DbService.getCategoriesRaw().find((category) => category.slug === slug) as DbCategory;
+  },
+
+  async getCategoryPosts(slug: string): Promise<PostMeta[]> {
+    const posts = await this.getPostsMeta();
+    const categoryPosts: PostMeta[] = [];
+
+    for (const postMeta in posts.posts) {
+      const post = posts.posts[postMeta];
+
+      if (post.category === slug) {
+        categoryPosts.push(post);
+      }
+    }
+
+    return categoryPosts;
   },
 };

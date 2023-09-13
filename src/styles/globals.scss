@@ -1,8 +1,5 @@
 @use '@/styles/layout';
 
-/* stylelint-disable import-notation */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css');
-
 :root {
   --bg-color: #181a2a;
   --bg-color-secondary: #141624;
@@ -12,6 +9,8 @@
   --dark-grey: #696a75;
   --blue: #4b6bfb;
   --blue-05: #4b6bfb0A;
+  --code-bg: #1e1e1e;
+  --code-text: #d7ba7d;
 }
 
 * {

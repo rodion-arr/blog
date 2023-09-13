@@ -1,14 +1,10 @@
 @use '@/styles/breakpoints';
 @use '@/styles/presets';
 
-.latest-posts {
-  margin: 48px 0 32px;
-
-  &__list {
-    margin-bottom: 32px;
-    display: grid;
-    grid-template-columns: 1fr;
-  }
+.posts-list {
+  margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: 1fr;
 
   &__item {
     @include presets.border;
@@ -50,9 +46,7 @@
 }
 
 @include breakpoints.bp-3 {
-  .latest-posts {
-    &__list {
+  .posts-list {
       grid-template-columns: repeat(3, 1fr);
-    }
   }
 }

@@ -1,17 +1,12 @@
+'use client';
 import css from './TopMenu.module.scss';
 import { Link } from '@/components/Util/Link/Link';
-
-const menuItems = [
-  { title: 'Home', href: '/' },
-  { title: 'Backend', href: '/backend' },
-  { title: 'CSS/Layout', href: '/css' },
-  { title: 'JavaScript/React', href: '/js' },
-  { title: 'Tech project management', href: '/pm' },
-  { title: 'DevOps', href: '/devops' },
-  { title: 'Misc', href: '/misc' },
-];
+import { useState } from 'react';
+import { UrlService } from '@/services/url.service';
 
 export const TopMenu = () => {
+  const [menuItems] = useState<{ title: string; href: string }[]>(UrlService.getMenuItems());
+
   return (
     <ul className={css.menu}>
       {menuItems.map((item, index) => (

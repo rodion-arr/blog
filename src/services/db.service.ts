@@ -7,6 +7,9 @@ import rehypeHighlight from 'rehype-highlight';
 import yaml from 'js-yaml';
 import { PostMeta } from '@/types/post-meta';
 import { DbPostsMeta } from '@/types/db-posts-meta';
+import { CategoryPosts } from '@/types/category-posts';
+import { UrlService } from '@/services/url.service';
+import { categories } from '@/constants';
 
 export const DbService = {
   postsMetaMemo: null as DbPostsMeta | null,
@@ -44,6 +47,29 @@ export const DbService = {
     this.postsMetaMemo = result;
 
     return result;
+  },
+
+  async getLatestPostsByCategory() {
+    const posts = await this.getPostsMeta();
+    const postsByCategory: Record<string, CategoryPosts> = {};
+
+    for (const postMeta in posts.posts) {
+      const post = posts.posts[postMeta];
+
+      if (!postsByCategory[post.category]) {
+        postsByCategory[post.category] = {
+          title: categories.find((category) => category.slug === post.category)?.title || '',
+          href: UrlService.getCategoryUrl(post.category),
+          posts: [],
+        };
+      }
+
+      if (postsByCategory[post.category].posts.length < 3) {
+        postsByCategory[post.category].posts.push(post);
+      }
+    }
+
+    return Object.values(postsByCategory);
   },
 
   async getPostContent(postPath: string) {

@@ -1,0 +1,18 @@
+@use '@/styles/breakpoints';
+
+.about {
+  color: var(--secondary-text-color);
+
+  &__title {
+    color: var(--primary-text-color);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+}
+
+@include breakpoints.bp-1 {
+  .about {
+    max-width: 280px;
+  }
+}

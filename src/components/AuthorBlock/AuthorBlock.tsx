@@ -13,15 +13,15 @@ export const AuthorBlock = () => {
           loading='lazy'
         />
         <div className={css.author__name}>
-          <div className={css['author__name-text']}>Rodion Abdurakhimov</div>
+          <h1 className={css['author__name-text']}>Rodion Abdurakhimov</h1>
           <div className={css.author__title}>Senior Software Engineer</div>
         </div>
       </div>
 
       <div className={css.author__about}>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam asperiores consequatur
-        culpa cum, dicta dignissimos error, esse et eveniet in inventore iste modi necessitatibus
-        obcaecati quis ratione sint tenetur veniam.
+        Meet Rodion Abdurakhimov, a software engineer and open source contributor, based in Kyiv,
+        Ukraine 🇺🇦. <br /> Main interests: JavaScript backend and frontend development. Excited
+        about projects to apply a wide range of knowledge.
       </div>
 
       <SocialLinks />

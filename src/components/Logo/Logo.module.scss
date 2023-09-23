@@ -1,0 +1,17 @@
+.logo {
+  font-family: var(--font-work-sans);
+  color: var(--primary-text-color);
+  font-size: 31px;
+  letter-spacing: 0;
+  white-space: nowrap;
+  user-select: none;
+
+  &__accent {
+    font-weight: 900;
+  }
+
+  &__zone {
+    font-size: 20px;
+    margin-left: 4px;
+  }
+}

@@ -1,0 +1,33 @@
+@use '@/styles/breakpoints';
+@use '@/styles/presets';
+
+.posts-list {
+  margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+
+  &__item {
+    @include presets.border;
+  }
+
+  &__title {
+    display: block;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 28px;
+    margin-bottom: 20px;
+    text-decoration: none;
+  }
+
+  &__date {
+    color: var(--secondary-text-color);
+    margin-bottom: 16px;
+  }
+}
+
+@include breakpoints.bp-3 {
+  .posts-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

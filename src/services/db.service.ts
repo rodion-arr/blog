@@ -6,14 +6,25 @@ import remarkFrontmatter from 'remark-frontmatter';
 import rehypeHighlight from 'rehype-highlight';
 import yaml from 'js-yaml';
 import { PostMeta } from '@/types/post-meta';
+import { DbPostsMeta } from '@/types/db-posts-meta';
+import { CategoryPosts } from '@/types/category-posts';
+import { UrlService } from '@/services/url.service';
+import { categories } from '@/constants';
+import { DbCategory } from '@/types/db-category';
+import { DbPost } from '@/types/db-post';
 
 export const DbService = {
-  async getPostsMeta() {
-    const allTags = new Set<string>();
-    const postsMeta: PostMeta[] = [];
+  postsMetaMemo: null as DbPostsMeta | null,
 
-    // TODO change to content/posts
-    const posts = await this.walk(`${process.cwd()}/content/drafts`);
+  async getPostsMeta(): Promise<DbPostsMeta> {
+    if (this.postsMetaMemo) {
+      return this.postsMetaMemo;
+    }
+
+    const allTags = new Set<string>();
+    const postsMeta: Record<string, PostMeta> = {};
+
+    const posts = await this.walk(`${process.cwd()}/content/posts`);
 
     for (const postPath of posts) {
       const meta = this.parseFrontMatter(await readFile(postPath, { encoding: 'utf-8' }));
@@ -21,23 +32,51 @@ export const DbService = {
       if (meta) {
         meta.tags.forEach((tag: string) => allTags.add(tag));
 
-        postsMeta.push({
+        postsMeta[meta.slug] = {
           ...meta,
           datePublished: new Date(meta.datePublished),
-        });
+          path: postPath,
+        };
       }
     }
 
-    return {
+    const result = {
       posts: postsMeta,
       tags: Array.from(allTags),
     };
+
+    // memoize
+    this.postsMetaMemo = result;
+
+    return result;
+  },
+
+  async getLatestPostsByCategory() {
+    const posts = await this.getPostsMeta();
+    const postsByCategory: Record<string, CategoryPosts> = {};
+
+    for (const postMeta in posts.posts) {
+      const post = posts.posts[postMeta];
+
+      if (!postsByCategory[post.category]) {
+        postsByCategory[post.category] = {
+          title: categories.find((category) => category.slug === post.category)?.title || '',
+          href: UrlService.getCategoryUrl(post.category),
+          posts: [],
+        };
+      }
+
+      if (postsByCategory[post.category].posts.length < 3) {
+        postsByCategory[post.category].posts.push(post);
+      }
+    }
+
+    return Object.values(postsByCategory);
   },
 
   async getPostContent(postPath: string) {
-    const mdx = await readFile(`${process.cwd()}${postPath}`, 'utf-8');
+    const mdx = await readFile(postPath, 'utf-8');
 
-    // TODO TOC
     return (
       await evaluate(mdx, {
         ...(runtime as any),
@@ -69,5 +108,68 @@ export const DbService = {
     }
 
     return null;
+  },
+
+  async getPost(slug: string): Promise<DbPost | null> {
+    const posts = await this.getPostsMeta();
+
+    const post = posts.posts[slug];
+
+    if (!post) {
+      return null;
+    }
+
+    return {
+      meta: post,
+      content: await this.getPostContent(post.path),
+    };
+  },
+
+  getCategoriesRaw() {
+    return categories;
+  },
+
+  getCategorySlugs(): string[] {
+    return DbService.getCategoriesRaw().map((category) => category.slug);
+  },
+
+  getCategoryBySlug(slug: string): DbCategory {
+    return DbService.getCategoriesRaw().find((category) => category.slug === slug) as DbCategory;
+  },
+
+  async getCategoryPosts(slug: string): Promise<PostMeta[]> {
+    const posts = await this.getPostsMeta();
+    const categoryPosts: PostMeta[] = [];
+
+    for (const postMeta in posts.posts) {
+      const post = posts.posts[postMeta];
+
+      if (post.category === slug) {
+        categoryPosts.push(post);
+      }
+    }
+
+    return categoryPosts;
+  },
+
+  async getAllTags(): Promise<string[]> {
+    const posts = await this.getPostsMeta();
+
+    return posts.tags;
+  },
+
+  async getPostsByTag(tag: string) {
+    const posts = await this.getPostsMeta();
+    const postsWithTag: PostMeta[] = [];
+
+    for (const postMeta in posts.posts) {
+      const post = posts.posts[postMeta];
+
+      if (post.tags.includes(tag)) {
+        postsWithTag.push(post);
+      }
+    }
+
+    return postsWithTag;
   },
 };

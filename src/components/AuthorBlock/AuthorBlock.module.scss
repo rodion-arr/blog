@@ -1,0 +1,44 @@
+.author {
+  padding: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-direction: column;
+  background: var(--grey);
+  border-radius: 12px;
+
+  &__card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  &__photo {
+    width: 64px;
+    height: 64px;
+    border-radius: 100%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  &__name-text {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 28px;
+  }
+
+  &__title {
+    color: var(--secondary-text-color);
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  &__about {
+    color: var(--secondary-text-color);
+    font-size: 18px;
+    line-height: 26px;
+    text-align: center;
+  }
+}

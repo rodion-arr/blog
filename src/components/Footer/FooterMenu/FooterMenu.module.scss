@@ -1,0 +1,27 @@
+.footer-nav {
+  &__title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+
+    &__item {
+      color: var(--secondary-text-color);
+
+      * {
+        text-decoration: none;
+      }
+    }
+
+    &__active-link {
+      text-decoration: underline;
+      font-weight: 700;
+    }
+  }
+}

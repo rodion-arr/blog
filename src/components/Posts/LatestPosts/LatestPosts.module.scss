@@ -1,0 +1,23 @@
+@use '@/styles/breakpoints';
+
+.latest-posts {
+  margin: 48px 0 32px;
+
+  .more {
+    display: flex;
+    justify-content: center;
+  }
+
+  .button {
+    margin-bottom: 32px;
+    width: 100%;
+  }
+}
+
+@include breakpoints.bp-3 {
+  .latest-posts {
+    .button {
+      width: fit-content;
+    }
+  }
+}

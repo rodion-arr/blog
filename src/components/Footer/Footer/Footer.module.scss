@@ -1,0 +1,46 @@
+@use '@/styles/breakpoints';
+
+.footer {
+  background: var(--bg-color-secondary);
+  border-top: 1px solid var(--grey);
+  padding: 64px 0 32px;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  &__copyrights {
+    color: var(--secondary-text-color);
+  }
+
+  &__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    border-top: 1px solid var(--grey);
+    margin-top: 64px;
+    padding-top: 32px;
+  }
+}
+
+@include breakpoints.bp-1 {
+  .footer {
+    &__content {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+}
+
+@include breakpoints.bp-2 {
+  .footer {
+    &__bottom {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+}

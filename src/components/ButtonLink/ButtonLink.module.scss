@@ -1,0 +1,11 @@
+.button {
+  display: flex;
+  padding: 12px 20px;
+  justify-content: center;
+  align-items: center;
+  color: var(--dark-grey);
+  font-weight: 500;
+  border-radius: 6px;
+  border: 1px solid var(--grey);
+  text-decoration: none;
+}

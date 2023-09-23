@@ -1,0 +1,31 @@
+.title {
+  margin-bottom: 24px;
+
+  h1 {
+    font-size: 36px;
+    line-height: 40px;
+    margin-bottom: 8px;
+  }
+
+  &__breadcrubs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    color: var(--secondary-text-color);
+
+    a {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__separator {
+    border-right: 1px solid var(--primary-text-color);
+    height: 16px;
+  }
+}

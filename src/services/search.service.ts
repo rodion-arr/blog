@@ -61,7 +61,7 @@ export const SearchService = {
       const resultsFromIndex = this.index.search(query);
 
       resultsFromIndex.forEach((result) => {
-        const [type, slug] = result.ref.split('|');
+        const [type] = result.ref.split('|');
 
         if (type === 'categories') {
           searchResults.categories.push({} as DbCategory);

@@ -1,5 +1,5 @@
 import css from './FooterMenu.module.scss';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Link } from '@/components/Util/Link/Link';
 import { CategoryLink } from '@/types/category-link';
 

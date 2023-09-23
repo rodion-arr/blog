@@ -7,7 +7,7 @@ export const FooterAbout: FC = () => {
       <div className={css['about__title']}>About</div>
 
       <div className={css['about__text']}>
-        Articles by Rodion Abdurekhimov - a software engineer and open source contributor, based in
+        Articles by Rodion Abdurakhimov - a software engineer and open source contributor, based in
         Kyiv, Ukraine 🇺🇦. <br /> Main interests: JavaScript backend and frontend development.
       </div>
     </div>

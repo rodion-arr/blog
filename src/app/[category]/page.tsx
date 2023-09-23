@@ -2,6 +2,9 @@ import React from 'react';
 import { DbService } from '@/services/db.service';
 import { RouteParams } from '@/types/route-params';
 import { Category } from '@/components/Category/Category/Category';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { SITE_NAME, SITE_THEME_COLOR } from '@/constants';
 
 export async function generateStaticParams() {
   const categoriesSlugs = DbService.getCategorySlugs();
@@ -11,10 +14,33 @@ export async function generateStaticParams() {
   }));
 }
 
-// todo generateMetadata()
+export async function generateMetadata({ params }: RouteParams): Promise<Metadata> {
+  const category = DbService.getCategoryBySlug(params.category);
+
+  if (!category) {
+    notFound();
+  }
+
+  const title = `${SITE_NAME} | ${category.title}`;
+
+  return {
+    title,
+    description: category.description,
+    themeColor: SITE_THEME_COLOR,
+    openGraph: {
+      title,
+      description: category.description,
+    },
+  };
+}
 
 export default async function Page({ params }: RouteParams) {
   const category = DbService.getCategoryBySlug(params.category);
+
+  if (!category) {
+    return null;
+  }
+
   const posts = await DbService.getCategoryPosts(category.slug);
 
   return <Category title={category.title} posts={posts} />;

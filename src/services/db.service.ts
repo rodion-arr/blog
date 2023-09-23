@@ -24,8 +24,7 @@ export const DbService = {
     const allTags = new Set<string>();
     const postsMeta: Record<string, PostMeta> = {};
 
-    // TODO change to content/posts
-    const posts = await this.walk(`${process.cwd()}/content/drafts`);
+    const posts = await this.walk(`${process.cwd()}/content/posts`);
 
     for (const postPath of posts) {
       const meta = this.parseFrontMatter(await readFile(postPath, { encoding: 'utf-8' }));
@@ -78,7 +77,6 @@ export const DbService = {
   async getPostContent(postPath: string) {
     const mdx = await readFile(postPath, 'utf-8');
 
-    // TODO TOC
     return (
       await evaluate(mdx, {
         ...(runtime as any),
@@ -112,12 +110,14 @@ export const DbService = {
     return null;
   },
 
-  async getPost(slug: string): Promise<DbPost> {
+  async getPost(slug: string): Promise<DbPost | null> {
     const posts = await this.getPostsMeta();
 
     const post = posts.posts[slug];
 
-    console.log(post.path);
+    if (!post) {
+      return null;
+    }
 
     return {
       meta: post,
@@ -150,5 +150,26 @@ export const DbService = {
     }
 
     return categoryPosts;
+  },
+
+  async getAllTags(): Promise<string[]> {
+    const posts = await this.getPostsMeta();
+
+    return posts.tags;
+  },
+
+  async getPostsByTag(tag: string) {
+    const posts = await this.getPostsMeta();
+    const postsWithTag: PostMeta[] = [];
+
+    for (const postMeta in posts.posts) {
+      const post = posts.posts[postMeta];
+
+      if (post.tags.includes(tag)) {
+        postsWithTag.push(post);
+      }
+    }
+
+    return postsWithTag;
   },
 };

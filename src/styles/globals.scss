@@ -25,6 +25,10 @@ img {
 
 a {
   color: inherit;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 html,

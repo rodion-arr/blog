@@ -1,0 +1,19 @@
+.tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  &__tag {
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--blue-05);
+    text-decoration: none;
+    border-radius: 6px;
+    color: var(--blue);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+  }
+}

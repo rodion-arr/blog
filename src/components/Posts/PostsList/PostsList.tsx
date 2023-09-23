@@ -1,10 +1,11 @@
 'use client';
 import css from './PostsList.module.scss';
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { Link } from '@/components/Util/Link/Link';
 import { Date } from '@/components/Util/Date/Date';
 import { PostMeta } from '@/types/post-meta';
 import { UrlService } from '@/services/url.service';
+import { PostTags } from '@/components/Posts/PostTags/PostTags';
 
 type Props = {
   posts: PostMeta[];
@@ -26,13 +27,7 @@ export const PostsList: FC<Props> = ({ posts }) => {
             <Date date={post.datePublished} />
           </div>
 
-          <div className={css['posts-list__tags']}>
-            {post.tags.map((tag, index) => (
-              <Link className={css['posts-list__tag']} href={UrlService.getTagUrl(tag)} key={index}>
-                {tag}
-              </Link>
-            ))}
-          </div>
+          <PostTags tags={post.tags} />
         </div>
       ))}
     </div>

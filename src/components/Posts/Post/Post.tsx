@@ -5,6 +5,7 @@ import React, { FC } from 'react';
 import { PostTitle } from '@/components/Posts/PostTitle/PostTitle';
 import { PostTags } from '@/components/Posts/PostTags/PostTags';
 import { DisqusComments } from '@/components/DisqusComments/DisqusComments';
+import { ArticleSD } from '@/components/StructuredData/ArticleSD/ArticleSD';
 
 type Props = {
   category: DbCategory;
@@ -23,6 +24,8 @@ export const Post: FC<Props> = ({ category, post }) => {
       <Content />
 
       <DisqusComments title={meta.title} id={meta.slug} />
+
+      <ArticleSD headline={meta.title} datePublished={meta.datePublished.toISOString()} />
     </article>
   );
 };

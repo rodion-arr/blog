@@ -5,6 +5,7 @@ import { LatestPosts } from '@/components/Posts/LatestPosts/LatestPosts';
 import { Metadata } from 'next';
 import { MAIN_PAGE_TITLE, SITE_DESCRIPTION, SITE_THEME_COLOR } from '@/constants';
 import logo from '@/images/logo.png';
+import { LogoSD } from '@/components/StructuredData/LogoSD/LogoSD';
 
 export const metadata: Metadata = {
   title: MAIN_PAGE_TITLE,
@@ -25,6 +26,8 @@ export default async function Home() {
       <AuthorBlock />
 
       <LatestPosts categories={latestPosts} />
+
+      <LogoSD />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { Work_Sans, Source_Serif_4 } from 'next/font/google';
 import { SITE_URL } from '@/constants';
 import { Header } from '@/components/Header/Header/Header';
 import { Footer } from '@/components/Footer/Footer/Footer';
+import Script from 'next/script';
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
@@ -35,6 +36,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel='stylesheet'
           href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css'
         />
+
+        <Script id='gtm'>
+          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','GTM-PHWG9535');`}
+        </Script>
+
+        <noscript>
+          <iframe
+            title='gtm'
+            src='https://www.googletagmanager.com/ns.html?id=GTM-PHWG9535'
+            height='0'
+            width='0'
+            style={{ display: 'none', visibility: 'hidden' }}
+          ></iframe>
+        </noscript>
       </body>
     </html>
   );

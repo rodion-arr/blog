@@ -26,8 +26,11 @@ export const Link = ({
     // Using URL().pathname to get rid of query and hash
     const activePathname = new URL(pathname, location.href).pathname;
 
-    const newClassName =
-      linkPathname === activePathname ? `${className} ${activeClassName}`.trim() : className;
+    const isActiveLink =
+      (props.href !== '/' && activePathname.includes(linkPathname)) ||
+      linkPathname === activePathname;
+
+    const newClassName = isActiveLink ? `${className} ${activeClassName}`.trim() : className;
 
     if (newClassName !== computedClassName) {
       setComputedClassName(newClassName);

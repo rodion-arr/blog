@@ -14,7 +14,7 @@ I hope providing a few examples will help people avoid these mistake and improve
 
 Let's start with a simple example - a menu bar with a few links.
 
-![Example 1 - menu bar](https://github.com/rodion-arr/rodion-arr/assets/5843270/de63acbd-3cd5-4d3b-bfcb-ed5823e16586)
+![Example 1 - menu bar](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/09/avoid-fixed-height-in-css-layouts/1.png)
 
 I saw a lot of times when such menu block was laid out with fixed height, like this:
 
@@ -37,7 +37,7 @@ The `height` rule can be dropped here completely - the menu will look exactly th
 
 Another example is adding fixed height to images, like in this blog page, for example:
 
-![Example 2 - Blog post image](https://github.com/rodion-arr/rodion-arr/assets/5843270/ba0f07e2-69c1-4415-a3f8-58c67a0252be)
+![Example 2 - Blog post image](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/09/avoid-fixed-height-in-css-layouts/2.png)
 
 Let's consider the following CSS:
 
@@ -56,7 +56,7 @@ There are a few problems with this approach:
 1. The image is not responsive. If the screen is smaller than 700px (plus sidebar width), the image will overflow the screen.
 1. Adding a new image with different dimensions (aspect ratio) will cause image to look distorted, like this (vertical image added to the post):
 
-![Example 2 - Blog post image](https://github.com/rodion-arr/rodion-arr/assets/5843270/deb4e4f6-6fff-47d0-ba5d-99b80ae1bfa9)
+![Example 2 - Blog post image](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/09/avoid-fixed-height-in-css-layouts/3.png)
 
 In most cases having just `width: 100%;` rule without `height` is enough and the image will look good on any screen size.
 
@@ -78,7 +78,7 @@ To solve this problem, we can use `object-fit` CSS rule. It allows to specify ho
 
 So the image from previous example will look like this:
 
-![Example 3 - object-fit example](https://github.com/rodion-arr/rodion-arr/assets/5843270/77aa5bc0-0a40-490b-9f7a-0c3df9faf3ec)
+![Example 3 - object-fit example](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/09/avoid-fixed-height-in-css-layouts/4.png)
 
 ## Links
 

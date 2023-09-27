@@ -66,22 +66,22 @@ Direct pushes and merges to `develop` and `master` branches are restricted for d
 
 Developer can do everything in feature branch to keep it up-to-date in relation to `develop` branch (including rebasing and force pushing).
 
-![New feature flow](https://github.com/rodion-arr/rodion-arr/assets/5843270/7c782c24-1f85-405c-a0b2-6e279e725033)
+![New feature flow](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/08/git-flow/1.png)
 
 Developer finishes feature in branch and makes push. It’s time for integrating to develop.
 
 #### Integrating changes to develop branch
 
-Developers can merge feature into `develop` only via pull request.
+Developers can merge feature into `develop` only via pull request.
 
 PR policy:
 
 - All developers will get notifications about new PRs
 - There is group of Mandatory reviewers, at least one from this group (except PR author) should approve PR
 
-After approving – branch is squash-rebased on develop.
+After approving – branch is squash-rebased on develop.
 
-![Feature branch merged](https://github.com/rodion-arr/rodion-arr/assets/5843270/9e2d95b5-16ad-4980-b37f-968624a26e00)
+![Feature branch merged](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/08/git-flow/2.png)
 
 Feature branch is deleting after merge. It is not needed anymore.
 
@@ -104,7 +104,7 @@ Release branch is building and deploying to Stage environment for regression tes
 Regression bug fixes for this release must be committed only once to current release branch.
 Direct pushes and merges to release branches are restricted for developers. To start new bugfix – developer must create new branch from release branch and then submit a PR into release branch.
 
-![Release branch started](https://github.com/rodion-arr/rodion-arr/assets/5843270/4c021254-74db-42cb-841c-c83b1ab4789d)
+![Release branch started](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/08/git-flow/3.png)
 
 ##### Closing release (regression finished)
 
@@ -116,7 +116,7 @@ Release is closed with next actions:
 - `master` tagged with version number `vX.X.X`.
 - `release` branch now can be deleted.
 
-![Release closed](https://github.com/rodion-arr/rodion-arr/assets/5843270/8b9e1381-0ef6-4544-adb3-737c9d7022ec)
+![Release closed](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/08/git-flow/4.png)
 
 #### Hot fix flow
 
@@ -127,7 +127,7 @@ In case of hotfix required – `hotfix` branch is created from `master`.
 - Example – `hotfix/716470_regulations_update`
 - Where `716470_` - is task ID in bug tracking system.
 
-![Hotfix started](https://github.com/rodion-arr/rodion-arr/assets/5843270/b8a03680-6f21-4cd4-802c-d5092f537f16)
+![Hotfix started](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/08/git-flow/5.png)
 
 Hotfix branch is deploying to Stage for testing. After testing – hotfix is closed in git.
 

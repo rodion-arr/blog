@@ -1,0 +1,468 @@
+---
+title: Common validation examples in Nest.js
+description: This post will show validation examples in Nest.js
+slug: nestjs-validation-examples
+category: backend
+datePublished: 2023-09-30T00:00:00.000Z
+tags: [intermediate, nestjs, nodejs, typescript, backend, api, validation]
+---
+
+It is a common task to receive complex objects as input to our APIs and of course we must validate these objects. In this post we will review few examples of how to validate complex objects in Nest.js APIs via DTO files, `ValidationPipe` and underlying `class-validation` package.
+
+Unfortunately neither Nest.js nor `class-validator` documentations still have a comprehensive examples of how we can validate more complex requests containing, for example, nested objects, array of objects or conditional validation logic. This may require developers to do a lot of tries and fails in order to find correct decorators to make it work. Let's review some common examples that I've faced in Nest.js projects and see how they can be validated.
+
+## Prerequisites
+
+> Note: At the time of this post - Nest.js core had version 10.2.6
+
+Let's first install a fresh Nest.js project and setup validation with the help of next commands (you will need `nest` CLI installed):
+
+```bash
+# Create new Nest.js project
+nest new validation
+
+# Install validation packages
+npm i --save class-validator class-transformer
+```
+We need to set up a `ValidatorPipe` in `main.ts` file next:
+
+```typescript
+import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  // enable validation globally
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+    }),
+  );
+
+  await app.listen(3000);
+}
+bootstrap();
+```
+
+We can run our project now:
+
+```bash
+npm run start:dev
+```
+
+## Validation examples
+
+Validation logic in Nest.js applications usually stored in files called `DTO`s (Data Transfer Object). `class-validator` package provides a lot of decorators that we can use to validate our DTOs. For simplicity, we will create simple APIs in `app.controller.ts`. In real world applications we would split our application into feature modules.
+
+### Arrays validation
+
+Let's imagine that we need to accept an array of numbers as input to our API. We can validate it with the help of `@IsInt()` decorator. Let's create a DTO class in `src/dto/post-array.dto.ts` file with next content:
+
+```typescript
+import { ArrayNotEmpty, IsArray, IsInt, IsNotEmpty } from 'class-validator';
+
+export class PostArraysDto {
+  @IsNotEmpty()
+  @ArrayNotEmpty()
+  @IsArray()
+  @IsInt({ each: true })
+  array: number[];
+}
+```
+
+We can use this DTO in our `app.controller.ts` now:
+
+```typescript
+import { Body, Controller, Post } from '@nestjs/common';
+import { PostArraysDto } from './dto/post-array.dto';
+
+@Controller()
+export class AppController {
+  @Post('/arrays')
+  postArray(@Body() body: PostArraysDto): PostArraysDto {
+    return body;
+  }
+}
+```
+
+If we POST an empty body to `/arrays` endpoint we will get next validation error:
+
+```bash
+curl --location --request POST 'http://localhost:3000/arrays'
+```
+
+```json
+{
+  "message": [
+    "each value in array must be an integer number",
+    "array should not be empty"
+  ],
+  "error": "Bad Request",
+  "statusCode": 400
+}
+```
+
+Let's POST some stings in array, validation will fail:
+
+```bash
+curl --location 'http://localhost:3000/arrays' \
+--header 'Content-Type: application/json' \
+--data '{
+    "array": ["string"]
+}'
+```
+
+```json
+{
+  "message": [
+    "each value in array must be an integer number"
+  ],
+  "error": "Bad Request",
+  "statusCode": 400
+}
+```
+
+Posting numbers will succeed.
+
+### Nested objects validation
+
+Next task is to accept and validate nested objects in our API. Let's create a DTO in `src/dto/post-nested-object.dto.ts`. Now we need more than 1 class - first class will specify the structure of nested object and second class will be used to validate the whole request:
+
+```typescript
+import { Type } from 'class-transformer';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+
+export class NestedObject {
+  @IsNotEmpty()
+  @IsNumber()
+  field: number;
+
+  @IsNotEmpty()
+  @IsString()
+  field2: string;
+}
+
+export class PostNestedObjectDto {
+  @IsNotEmpty()
+  @IsObject()
+  @ValidateNested({ each: true })
+  @Type(() => NestedObject)
+  nestedObject: NestedObject;
+}
+```
+
+`PostNestedObjectDto` has 1 field `nestedObject` that is required to be an object of type `NestedObject`. `NestedObject` has 2 fields - `field` and `field2` that are required to be a number and a string respectively.
+
+We can use this DTO in our `app.controller.ts` now:
+
+```typescript
+import { Body, Controller, Post } from '@nestjs/common';
+// other DTO imports
+import { PostNestedObjectDto } from './dto/post-nested-object.dto';
+
+@Controller()
+export class AppController {
+  // ... other code
+
+  @Post('/nested')
+  postNestedObject(@Body() body: PostNestedObjectDto): PostNestedObjectDto {
+    return body;
+  }
+}
+```
+
+If we POST empty `nestedObject` field - Nest.js will list all validation errors field by field for nested object just like we wanted:
+
+```bash
+curl --location 'http://localhost:3000/nested' \
+--header 'Content-Type: application/json' \
+--data '{
+    "nestedObject": {}
+}'
+```
+
+```json
+{
+  "message": [
+    "nestedObject.field must be a number conforming to the specified constraints",
+    "nestedObject.field should not be empty",
+    "nestedObject.field2 must be a string",
+    "nestedObject.field2 should not be empty"
+  ],
+  "error": "Bad Request",
+  "statusCode": 400
+}
+```
+
+### Arrays of objects validation
+
+Arrays of objects validation is very similar to nested objects validation. Let's create a new DTO in `src/dto/post-array-of-objects.dto.ts`:
+
+```typescript
+import { Type } from 'class-transformer';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+
+export class NestedObject {
+  @IsNotEmpty()
+  @IsNumber()
+  field: number;
+
+  @IsNotEmpty()
+  @IsString()
+  field2: string;
+}
+
+export class ArrayOfObjectsDto {
+  @IsArray()
+  @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => NestedObject)
+  objectsCollection: NestedObject[];
+}
+```
+
+Here we have an `ArrayOfObjectsDto` class that has `objectsCollection` field that is required to be an array of `NestedObject` objects.
+
+And we can use this DTO in our `app.controller.ts` now:
+
+```typescript
+import { Body, Controller, Post } from '@nestjs/common';
+// other DTO imports
+import { ArrayOfObjectsDto } from './dto/post-array-of-objects.dto';
+
+@Controller()
+export class AppController {
+  // ... other code
+
+  @Post('/object-arrays')
+  postArrayOfObjects(@Body() body: ArrayOfObjectsDto): ArrayOfObjectsDto {
+    return body;
+  }
+}
+```
+
+Posting empty object inside array will fail with detailed error for each nested object field:
+
+```bash
+curl --location 'http://localhost:3000/object-arrays' \
+--header 'Content-Type: application/json' \
+--data '{
+    "objectsCollection": [{}]
+}'
+```
+
+```json
+{
+  "message": [
+    "objectsCollection.0.field must be a number conforming to the specified constraints",
+    "objectsCollection.0.field should not be empty",
+    "objectsCollection.0.field2 must be a string",
+    "objectsCollection.0.field2 should not be empty"
+  ],
+  "error": "Bad Request",
+  "statusCode": 400
+}
+```
+
+### Conditional validation based on other fields
+
+Sometimes we need to validate fields based on other fields. For example, we need to validate `field2` only if `field1` meets some condition. Let's create a new DTO in `src/dto/post-conditional-validation.dto.ts` for this:
+
+```typescript
+import { IsNotEmpty, IsNumber, IsString, ValidateIf } from 'class-validator';
+
+export class PosConditionalValidationDto {
+  @IsNotEmpty()
+  @IsNumber()
+  field1: number;
+
+  @IsNotEmpty()
+  @IsString()
+  @ValidateIf((request) => Number(request.field1) === 1)
+  field2: string;
+}
+```
+
+As you can see - we use `@ValidateIf` decorator to specify a condition. In this case we validate `field2` only if `field1` is equal to `1`. We can use this DTO in our `app.controller.ts` now:
+
+```typescript
+import { Body, Controller, Post } from '@nestjs/common';
+// other DTO imports
+import { PosConditionalValidationDto } from './dto/post-conditional-validation.dto';
+
+@Controller()
+export class AppController {
+  // ... other code
+
+  @Post('/conditional')
+  postConditionalValidation(
+    @Body() body: PosConditionalValidationDto,
+  ): PosConditionalValidationDto {
+    return body;
+  }
+}
+```
+
+Now if we will POST `field1` equal to `2` without `field2` - validation will succeed:
+
+```bash
+curl --location 'http://localhost:3000/conditional' \
+--header 'Content-Type: application/json' \
+--data '{
+    "field1": 2
+}'
+```
+
+Responses with status 201 Created.
+
+But if we will POST `field1` equal to `1` without `field2` - validation will fail:
+
+```bash
+curl --location 'http://localhost:3000/conditional' \
+--header 'Content-Type: application/json' \
+--data '{
+    "field1": 1
+}'
+```
+
+```json
+{
+  "message": [
+    "field2 must be a string",
+    "field2 should not be empty"
+  ],
+  "error": "Bad Request",
+  "statusCode": 400
+}
+```
+
+### Validation of arrays of differently typed objects
+
+Let's imagine that we need to validate an array of objects that can have different types. Let's create a new DTO file `src/dto/post-array-of-products.dto.ts` for this:
+
+```typescript
+import { Type } from 'class-transformer';
+import {
+  ArrayNotEmpty,
+  IsNotEmpty,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+
+class Product {
+  @IsNotEmpty()
+  @IsString()
+  type: string;
+
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+}
+
+class Fruit extends Product {
+  @IsNotEmpty()
+  @IsString()
+  type = 'fruit';
+
+  @IsNotEmpty()
+  @IsString()
+  someFruitField: string;
+}
+
+class Vegetable extends Product {
+  @IsNotEmpty()
+  @IsString()
+  type = 'vegetable';
+
+  @IsNotEmpty()
+  @IsString()
+  someVegetableField: string;
+}
+
+export class PostArrayOfProductsDto {
+  @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => Product, {
+    discriminator: {
+      property: 'type',
+      subTypes: [
+        { value: Fruit, name: 'fruit' },
+        { value: Vegetable, name: 'vegetable' },
+      ],
+    },
+    keepDiscriminatorProperty: true,
+  })
+  products: (Fruit | Vegetable)[];
+}
+```
+
+We created a base `Product` DTO class that will be used to validate all objects in array. We also created 2 classes that extend `Product` class: `Fruit` and `Vegetable`. We also specified `discriminator` property in `@Type` decorator to tell `class-validator` how to distinguish between different types of objects in array. We can use this DTO in our `app.controller.ts` now:
+
+```typescript
+import { Body, Controller, Post } from '@nestjs/common';
+// other DTO imports
+import { PostArrayOfProductsDto } from './dto/post-array-of-products.dto';
+
+@Controller()
+export class AppController {
+  // ... other code
+
+  @Post('/products')
+  postProducts(@Body() body: PostArrayOfProductsDto): PostArrayOfProductsDto {
+    return body;
+  }
+}
+```
+
+Now if we will post 2 objects of different types - they will be validated as intended: `type: fruit` object is required to have `someFruitField`, `type: vegetable` object is required to have `someVegetableField` and both required to have `name` field from base DTO class.
+
+```bash
+curl --location 'http://localhost:3000/products' \
+--header 'Content-Type: application/json' \
+--data '{
+    "products": [
+        { "type": "fruit" },
+        { "type": "vegetable" }
+    ]
+}'
+```
+
+```json
+{
+  "message": [
+    "products.0.someFruitField must be a string",
+    "products.0.someFruitField should not be empty",
+    "products.0.name must be a string",
+    "products.0.name should not be empty",
+    "products.1.someVegetableField must be a string",
+    "products.1.someVegetableField should not be empty",
+    "products.1.name must be a string",
+    "products.1.name should not be empty"
+  ],
+  "error": "Bad Request",
+  "statusCode": 400
+}
+```
+
+## Links
+
+- Code from this article - [https://github.com/rodion-arr/nest-js-validation-example](https://github.com/rodion-arr/nest-js-validation-example)
+- Nest.js docs on validation - [https://docs.nestjs.com/techniques/validation](https://docs.nestjs.com/techniques/validation)
+- `class-validator` package - [https://github.com/typestack/class-validator](https://github.com/typestack/class-validator)
+- `class-transformer` package - [https://github.com/typestack/class-transformer](https://github.com/typestack/class-transformer)

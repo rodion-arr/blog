@@ -18,7 +18,7 @@ Let's talk about our teams configuration, release schedule and some business req
 At the time of this post this flow was successfully tested on 2 Scrum teams both working on the same codebase/project.
 
 Teams have 2 weeks Sprint duration where first 2-3 days of the Sprint are dedicated to regression testing and release to production process.
-Not all members of the teams are booked for regression testing and bugfixes in the beginning of the Sprint so it was required to have ability to start working on next version while previous version is being tested and deployed.
+Not all members of the teams are booked for regression testing and bugfixes in the beginning of the Sprint, so it was required to have ability to start working on next version while previous version is being tested and deployed.
 
 Before different flows and branching policies where researched and approved - The Business required to provide an ability to make some king of hot-fixes or urgent code changes in the middle of the Sprints.
 This requirement is based on possible unpredicted laws or regulations changes that our project is depending on.
@@ -29,7 +29,7 @@ Important to say that the project does not require to support multiple versions 
 
 Having strict releases schedule, some specific business requirements and release process - we found that GitFlow covers all the requirements that we have.
 
-GitFlow is branching policy that introduces 2 long living branches (`main`/`master` and `develop`), organizes parallel work on features for developes, documents release and hotfix branches flows.
+GitFlow is branching policy that introduces 2 long living branches (`main`/`master` and `develop`), organizes parallel work on features for developers, documents release and hotfix branches flows.
 
 Let's review it in more details.
 
@@ -146,10 +146,10 @@ This post described a successful case of using GitFlow in real teams. Let's talk
   - This leads to code reviews.
   - Potential bugs decreasing.
   - Knowledge sharing.
-- Regression Bugfixes are committed only once, there is no need to fix same bugs twice both in long lived release branch and the cherry-picking it into develop branch.
+- Regression Bugfixes are committed only once, there is no need to fix same bugs twice both in long-lived release branch and the cherry-picking it into develop branch.
 - Branches are organized in folders `feature/`, `release/`, `hotfix/` - better readability in git clients.
 - Git history is much cleaner due to using rebase where possible.
-- Any standardization is good in growing team, no chaos.
+- Any standardization is good at growing team, no chaos.
 - The flow is quite popular – easy onboarding for new people.
 
 ### Disadvantages

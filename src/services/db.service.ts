@@ -71,7 +71,13 @@ export const DbService = {
       }
     }
 
-    return Object.values(postsByCategory);
+    // sort posts by date DESC
+    return Object.values(postsByCategory).map((category) => {
+      return {
+        ...category,
+        posts: this.sortPostsByDate(category.posts),
+      };
+    });
   },
 
   async getPostContent(postPath: string) {
@@ -149,7 +155,7 @@ export const DbService = {
       }
     }
 
-    return categoryPosts;
+    return this.sortPostsByDate(categoryPosts);
   },
 
   async getAllTags(): Promise<string[]> {
@@ -171,5 +177,9 @@ export const DbService = {
     }
 
     return postsWithTag;
+  },
+
+  sortPostsByDate(posts: PostMeta[]) {
+    return posts.sort((a, b) => (a.datePublished < b.datePublished ? 1 : -1));
   },
 };

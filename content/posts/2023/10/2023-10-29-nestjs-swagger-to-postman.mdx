@@ -1,0 +1,22 @@
+---
+title: Importing NestJS Swagger to Postman
+description: How to easily import NestJS API schemas from Swagger to Postman
+slug: nestjs-swagger-to-postman
+category: backend
+datePublished: 2023-10-29T00:00:00.000Z
+tags: [beginner, nestjs, backend, api, postman, swagger]
+---
+
+In this very small post we will see how to migrate your NestJS APIs to Postman with the help of NestJS Swagger package.
+
+According to [NestJS docs](https://docs.nestjs.com/openapi/introduction#bootstrap) - `@nestjs/swagger` allows you to download the swagger JSON config by adding `-json` to the URL. For example, if your swagger is available at `http://localhost:3000/api`, you can download the JSON config from `http://localhost:3000/api-json`:
+
+![Swagger JSON file](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/10/nestjs-swagger-to-postman/1.png)
+
+After saving that JSON file on your drive - you can import it to a Postman collection by clicking on main menu `File -> Import`, selecting saved JSON file and clicking `Import` button:
+
+![Postman import window](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/10/nestjs-swagger-to-postman/2.png)
+
+After import is finished - you will see a new collection in your Postman:
+
+![Postman import result](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/10/nestjs-swagger-to-postman/3.png)

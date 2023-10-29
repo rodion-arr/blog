@@ -1,24 +1,24 @@
 ---
-title: Common validation examples in Nest.js
-description: This post will show validation examples in Nest.js
+title: Common validation examples in NestJS
+description: This post will show validation examples in NestJS
 slug: nestjs-validation-examples
 category: backend
 datePublished: 2023-09-30T00:00:00.000Z
 tags: [intermediate, nestjs, nodejs, typescript, backend, api, validation]
 ---
 
-It is a common task to receive complex objects as input to our APIs and of course we must validate these objects. In this post we will review few examples of how to validate complex objects in Nest.js APIs via DTO files, `ValidationPipe` and underlying `class-validation` package.
+It is a common task to receive complex objects as input to our APIs and of course we must validate these objects. In this post we will review few examples of how to validate complex objects in NestJS APIs via DTO files, `ValidationPipe` and underlying `class-validation` package.
 
-Unfortunately neither Nest.js nor `class-validator` documentations still have a comprehensive examples of how we can validate more complex requests containing, for example, nested objects, array of objects or conditional validation logic. This may require developers to do a lot of tries and fails in order to find correct decorators to make it work. Let's review some common examples that I've faced in Nest.js projects and see how they can be validated.
+Unfortunately neither NestJS nor `class-validator` documentations still have a comprehensive examples of how we can validate more complex requests containing, for example, nested objects, array of objects or conditional validation logic. This may require developers to do a lot of tries and fails in order to find correct decorators to make it work. Let's review some common examples that I've faced in NestJS projects and see how they can be validated.
 
 ## Prerequisites
 
-> Note: At the time of this post - Nest.js core had version 10.2.6
+> Note: At the time of this post - NestJS core had version 10.2.6
 
-Let's first install a fresh Nest.js project and setup validation with the help of next commands (you will need `nest` CLI installed):
+Let's first install a fresh NestJS project and setup validation with the help of next commands (you will need `nest` CLI installed):
 
 ```bash
-# Create new Nest.js project
+# Create new NestJS project
 nest new validation
 
 # Install validation packages
@@ -55,7 +55,7 @@ npm run start:dev
 
 ## Validation examples
 
-Validation logic in Nest.js applications usually stored in files called `DTO`s (Data Transfer Object). `class-validator` package provides a lot of decorators that we can use to validate our DTOs. For simplicity, we will create simple APIs in `app.controller.ts`. In real world applications we would split our application into feature modules.
+Validation logic in NestJS applications usually stored in files called `DTO`s (Data Transfer Object). `class-validator` package provides a lot of decorators that we can use to validate our DTOs. For simplicity, we will create simple APIs in `app.controller.ts`. In real world applications we would split our application into feature modules.
 
 ### Arrays validation
 
@@ -180,7 +180,7 @@ export class AppController {
 }
 ```
 
-If we POST empty `nestedObject` field - Nest.js will list all validation errors field by field for nested object just like we wanted:
+If we POST empty `nestedObject` field - NestJS will list all validation errors field by field for nested object just like we wanted:
 
 ```bash
 curl --location 'http://localhost:3000/nested' \
@@ -463,6 +463,6 @@ curl --location 'http://localhost:3000/products' \
 ## Links
 
 - Code from this article - [https://github.com/rodion-arr/nest-js-validation-example](https://github.com/rodion-arr/nest-js-validation-example)
-- Nest.js docs on validation - [https://docs.nestjs.com/techniques/validation](https://docs.nestjs.com/techniques/validation)
+- NestJS docs on validation - [https://docs.nestjs.com/techniques/validation](https://docs.nestjs.com/techniques/validation)
 - `class-validator` package - [https://github.com/typestack/class-validator](https://github.com/typestack/class-validator)
 - `class-transformer` package - [https://github.com/typestack/class-transformer](https://github.com/typestack/class-transformer)

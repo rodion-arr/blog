@@ -10,7 +10,7 @@ export const categories: DbCategory[] = [
   {
     title: 'Backend',
     slug: 'backend',
-    description: 'Articles about backend development, Node.js, Next.js, Nest.js, databases, etc.',
+    description: 'Articles about backend development, Node.js, Next.js, NestJS, databases, etc.',
   },
   {
     title: 'CSS/Layout',

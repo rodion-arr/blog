@@ -1,0 +1,76 @@
+---
+title: Fit long text into block
+description: In this post we will look at how to fix some text of random length into block
+slug: fit-text-into-block
+category: js
+datePublished: 2023-11-06T00:00:00.000Z
+tags: [intermediate, javascript, react, hooks]
+---
+
+One of not many tasks that CSS can’t natively handle sounds like this: “Get some text of random length and fit it into to block”. We will look at example below. The fact that the text has various length - prevents us from producing some CSS rules that will cover all the cases. This means that we need to detect the correct font size with the help of JS.
+
+I’ve faced this task in some React project, and I'll post the solution below but first let’s describe the task more closely.
+
+We have a grid of items, let’s say some catalog of products. The grid cell contains product image, and we need to show the product name inside the grid cell on mouse hover. But we have some product with very long name:
+
+![Product name overflows the grid cell](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/11/fit-text-into-block/1.png)
+
+The problem here that products in the catalog have different name length. Let's imagine designer does not want to apply line clamps here or to strip the product name somehow that does not fit into the cell. So we need to programmatically calculate the correct font size for each product.
+
+The task can be solved with next custom React hook:
+
+```js
+import { useEffect } from "react";
+
+/**
+ * Receives react ref to text element
+ * Calculates how many lines text takes
+ * and reduces its font-size until it will fit toLinesCount param
+ *
+ * @param textRef
+ * @param toLinesCount
+ * @param dependencies
+ */
+export const useFitTextToRows = (textRef, toLinesCount, dependencies = []) => {
+  const fitTextToLines = (el, text, toLines) => {
+    // get styles of element
+    const styles = getComputedStyle(el);
+
+    // get line height, current font size and height of element
+    const lineHeight = parseInt(styles.lineHeight.slice(0, -2));
+    const fontSize = parseInt(styles.fontSize.slice(0, -2));
+    const elHeight = el.offsetHeight;
+
+    // calculate amount of lines text takes
+    const lines = Math.floor(elHeight / lineHeight);
+
+    // if more than toLines - reduce font and repeat until fits
+    if (lines > toLines) {
+      el.style.fontSize = `${fontSize - 1}px`;
+      fitTextToLines(el, text, toLines);
+    }
+  };
+
+  useEffect(() => {
+    if (textRef && textRef.current) {
+      const el = textRef.current;
+      const text = el.innerText;
+
+      // reset prev font sizes
+      if (el.style.fontSize !== "") {
+        el.style.fontSize = "inherit";
+      }
+
+      fitTextToLines(el, text, toLinesCount);
+    }
+  }, dependencies);
+};
+```
+
+Let’s break it down. The hook expects 3 params: the text ref, how many lines this text should take and dependencies array for `useEffect` to recalculate logic on data changes. The hook calculates how many lines text takes and reduces its font-size until it will fit to `toLinesCount` param. It uses recursion to reduce font size until text fits into the block.
+
+In order the hook to work - the text HTML element requies to have `line-height` rule in CSS in order to proper calculate how many lines text takes.
+
+The live example can be found here: [Stackblitz project](https://stackblitz.com/edit/fit-text-into-block?file=src%2Fhooks%2Fuse-fit-text-to-lines.hook.js)
+
+<iframe src="https://stackblitz.com/edit/fit-text-into-block?embed=1&file=src%2Fhooks%2Fuse-fit-text-to-lines.hook.js" width="100%" height="800px"></iframe>

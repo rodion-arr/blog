@@ -1,0 +1,101 @@
+---
+title: Access parent selector in SCSS
+description: A useful SCSS hack to access parent selector in nested rules
+slug: access-parent-selector-scss
+category: css
+datePublished: 2023-11-27T00:00:00.000Z
+tags: [beginner, css, scss, bem]
+---
+
+## Problem
+
+Let's imagine that we need to cover a special case in SCSS when an HTML element has two specific classes.
+
+For example, we have a simple React component that accepts two props: `type` and `size`. Each prop is reflected in the HTML as a class.
+
+```jsx
+import React from 'react';
+import './Icon.scss';
+import classnames from 'classnames';
+
+export const Icon = ({ iconType, iconSize }) => {
+  const iconClasses = classnames({
+    icon: true,
+    [`icon--${iconType}`]: iconType,
+    [`icon--${iconSize}`]: iconSize,
+  });
+
+  return <div className={iconClasses} />;
+};
+```
+
+By requirements, we need to specially style the icon when it has both `icon--right` and `icon--big` classes.
+
+```scss
+@use 'svg';
+
+.icon {
+  width: 100px;
+  height: 100px;
+  background-color: #000;
+
+  @include svg.mask(
+    url('https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/08/colorize-svg/arrow.svg')
+  );
+
+  &--right {
+    transform: rotate(180deg);
+
+    // here we have a duplication of ".icon" selector that we already have above
+    &.icon--big {
+      width: 150px;
+      height: 150px;
+    }
+  }
+}
+```
+
+The problem is that in the `&.icon--big` selector we have a duplication of `.icon` selector that we already have above. We can't access `.icon` with SCSS parent selector (`&`) because we already nested deeper in `&--right`.
+
+In case we will update `.icon` selector, we will need to update `&.icon--big` selector as well which can be easily missed.
+
+## Solution
+
+To avoid duplication of `.icon` selector, we can use a special SCSS hack that allows us to access the parent selector in nested rules.
+
+We can store a reference to the parent selector in a variable like this: `$root: &;` and then use it in nested rules with the help of interpolation: `&#{$root}--big`.
+
+So our example will look like this:
+
+```scss
+@use 'svg';
+
+.icon {
+  // parent class reference is stored in $root variable
+  $root: &;
+
+  width: 100px;
+  height: 100px;
+  background-color: #000;
+
+  @include svg.mask(
+    url('https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2023/08/colorize-svg/arrow.svg')
+  );
+
+  &--right {
+    transform: rotate(180deg);
+
+    // now we can access parent selector with $root variable
+    &#{$root}--big {
+      width: 150px;
+      height: 150px;
+    }
+  }
+}
+```
+
+This way we can avoid duplication of `.icon` selector and easily update it in one place.
+
+## Source code
+
+A live example of this solution can be found on <a href="https://stackblitz.com/edit/stackblitz-starters-lngrvl?file=src%2FIcon.scss" target="_blank">Stackblitz</a>.

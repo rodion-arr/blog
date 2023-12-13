@@ -17,7 +17,7 @@ const workSans = Work_Sans({
 
 const sourceSerif4 = Source_Serif_4({
   variable: '--font-source-serif-4',
-  weight: ['400'],
+  weight: ['400', '700'],
   subsets: ['latin'],
 });
 

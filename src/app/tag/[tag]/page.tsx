@@ -2,7 +2,7 @@ import React from 'react';
 import { DbService } from '@/services/db.service';
 import { RouteParams } from '@/types/route-params';
 import { Category } from '@/components/Category/Category/Category';
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
 import { SITE_NAME, SITE_THEME_COLOR } from '@/constants';
 
 export async function generateStaticParams() {
@@ -20,13 +20,16 @@ export async function generateMetadata({ params: { tag } }: RouteParams): Promis
   return {
     title,
     description: description,
-    themeColor: SITE_THEME_COLOR,
     openGraph: {
       title,
       description: description,
     },
   };
 }
+
+export const viewport: Viewport = {
+  themeColor: SITE_THEME_COLOR,
+};
 
 export default async function Page({ params }: RouteParams) {
   const posts = await DbService.getPostsByTag(params.tag);

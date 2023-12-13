@@ -66,16 +66,14 @@ export const DbService = {
         };
       }
 
-      if (postsByCategory[post.category].posts.length < 3) {
-        postsByCategory[post.category].posts.push(post);
-      }
+      postsByCategory[post.category].posts.push(post);
     }
 
     // sort posts by date DESC
     return Object.values(postsByCategory).map((category) => {
       return {
         ...category,
-        posts: this.sortPostsByDate(category.posts),
+        posts: this.sortPostsByDate(category.posts).slice(0, 3)
       };
     });
   },

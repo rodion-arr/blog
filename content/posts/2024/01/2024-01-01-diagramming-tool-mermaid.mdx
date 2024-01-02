@@ -1,0 +1,41 @@
+---
+title: "Mermaid: diagramming tool, personal experience"
+description: In this post I'd like to share with you some notes about Mermaid - diagramming tool that I use for projects documentation.
+slug: diagramming-tool-mermaid
+category: pm
+datePublished: 2024-01-01T00:00:00.000Z
+tags: [beginner, tools, team]
+---
+
+Hi folks! First of all, I'd like to wish you a Happy New Year! 🎄🎉🎊 <br /> And thank AFU for having the ability to enter 2024 with you! 🙏
+
+I'd like to start this year with a post about [Mermaid](https://mermaid.js.org/) - diagramming tool that I use for projects documentation.
+
+## Why I choose Mermaid
+
+Back in 2023, one of my projects required to have some internal documentation in the form of diagrams. Here are requirements that I and my team had for choosing the tool:
+
+1. We wanted to have next types of diagrams: ER diagrams, Flowcharts, Sequence diagrams, diagrams to document back-end infrastructure (e.g., relations between DBs, caches, VMs, k8s, request flow, etc.).
+2. We wanted the possibility of collaborative work on the same diagram.
+3. We wanted diagrams to have versions history.
+
+We found that Mermaid covers all our requirements. Here are some pros and cons of Mermaid that I found during my work with it.
+
+## Pros
+
+1. As it's a code-based tool - versioning and collaborative work can be done by Git.
+1. It supports all diagram types we need with detailed documentation and examples.
+1. Visual part of diagrams can be customized with CSS or predefined themes.
+1. It is possible to embed diagrams straight into GitHub comments or Markdown files.
+1. There are plugins for two popular editors/IDEs: VS Code and Intellij which allows to preview diagrams in real-time.
+
+## Cons
+
+1. As it's a code-based tool - it requires some time to learn and may not fit for non-technical people that primarily work with GUIs.
+1. ER diagrams with 30–40 tables are hard to read due to diagrams are rendered too wide. I'm subscribed to [this GitHub issue](https://github.com/mermaid-js/mermaid/issues/2807) and looking forward to see it fixed.
+1. ER diagrams don't support regions (e.g., to group tables by modules).
+1. There is no separate diagram type for documenting back-end infrastructure, but it is possible to use Flowcharts for that, [see this example](https://github.com/mermaid-js/mermaid/issues/1227#issuecomment-1192060275).
+
+# Summary
+
+I'm happy with Mermaid and I'm going to use it in my future projects. I hope this post will help you to choose the right tool for your project.

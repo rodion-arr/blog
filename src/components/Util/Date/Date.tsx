@@ -1,12 +1,13 @@
 import { FC } from 'react';
 
 type Props = {
+  className?: string;
   date: Date;
 };
 
-export const Date: FC<Props> = ({ date }) => {
+export const Date: FC<Props> = ({ date, className = '' }) => {
   return (
-    <span>
+    <span className={className}>
       {monthNames[date.getMonth()]} {date.getUTCDate()}, {date.getFullYear()}
     </span>
   );

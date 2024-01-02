@@ -6,6 +6,7 @@ import { PostTitle } from '@/components/Posts/PostTitle/PostTitle';
 import { PostTags } from '@/components/Posts/PostTags/PostTags';
 import { DisqusComments } from '@/components/DisqusComments/DisqusComments';
 import { ArticleSD } from '@/components/StructuredData/ArticleSD/ArticleSD';
+import {Date} from "@/components/Util/Date/Date";
 
 type Props = {
   category: DbCategory;
@@ -17,7 +18,11 @@ export const Post: FC<Props> = ({ category, post }) => {
 
   return (
     <article className={css.post}>
-      <PostTags tags={meta.tags} className={css.tags} />
+      <div className={css['post-meta']}>
+        <PostTags tags={meta.tags} />
+
+        <Date className={css['post-meta-date']} date={meta.datePublished} />
+      </div>
 
       <PostTitle title={meta.title} category={category} />
 

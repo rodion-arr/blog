@@ -6,7 +6,7 @@ import { PostTitle } from '@/components/Posts/PostTitle/PostTitle';
 import { PostTags } from '@/components/Posts/PostTags/PostTags';
 import { DisqusComments } from '@/components/DisqusComments/DisqusComments';
 import { ArticleSD } from '@/components/StructuredData/ArticleSD/ArticleSD';
-import {Date} from "@/components/Util/Date/Date";
+import { Date } from '@/components/Util/Date/Date';
 
 type Props = {
   category: DbCategory;

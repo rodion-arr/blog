@@ -73,7 +73,7 @@ export const DbService = {
     return Object.values(postsByCategory).map((category) => {
       return {
         ...category,
-        posts: this.sortPostsByDate(category.posts).slice(0, 3)
+        posts: this.sortPostsByDate(category.posts).slice(0, 3),
       };
     });
   },

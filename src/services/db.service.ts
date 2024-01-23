@@ -12,6 +12,9 @@ import { UrlService } from '@/services/url.service';
 import { categories } from '@/constants';
 import { DbCategory } from '@/types/db-category';
 import { DbPost } from '@/types/db-post';
+import rehypeSlug from 'rehype-slug';
+import tableOfContents from '@jsdevtools/rehype-toc';
+import { HtmlElementNode } from '@jsdevtools/rehype-toc/lib/types';
 
 export const DbService = {
   postsMetaMemo: null as DbPostsMeta | null,
@@ -85,7 +88,45 @@ export const DbService = {
       await evaluate(mdx, {
         ...(runtime as any),
         remarkPlugins: [remarkFrontmatter],
-        rehypePlugins: [rehypeHighlight],
+        rehypePlugins: [
+          rehypeHighlight,
+          rehypeSlug,
+          [
+            tableOfContents,
+            {
+              customizeTOC: (toc: HtmlElementNode) => {
+                // @ts-ignore
+                if (!toc?.children?.[0]?.children?.length) {
+                  return null;
+                }
+
+                return {
+                  type: 'element',
+                  tagName: 'div',
+                  properties: {
+                    className: 'post-toc',
+                  },
+                  children: [
+                    {
+                      type: 'element',
+                      tagName: 'h2',
+                      properties: {
+                        className: 'table-of-contents__title',
+                      },
+                      children: [
+                        {
+                          type: 'text',
+                          value: 'Table of contents',
+                        },
+                      ],
+                    },
+                    toc,
+                  ],
+                };
+              },
+            },
+          ],
+        ],
         development: false,
       })
     ).default;

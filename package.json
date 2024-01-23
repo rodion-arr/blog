@@ -16,7 +16,7 @@
     "test": "npm run lint"
   },
   "dependencies": {
-    "classnames": "^2.3.2",
+    "classnames": "^2.5.1",
     "disqus-react": "^1.1.5",
     "lunr": "^2.3.9",
     "next": "^14.1.0",

@@ -1,0 +1,82 @@
+---
+title: Docker builds fail on M1 Mac with error code 100
+description: How to solve Docker builds fail on M1 Mac with error code 100
+slug: docker-mac-m1-error-code-100
+category: devops
+datePublished: 2024-01-24T00:00:00.000Z
+tags: [intermediate, devops, mac, docker]
+---
+
+In this post we will look at how to solve Docker builds fail on M1 Mac with error code 100.
+
+## Background
+
+Last year our team faced a problem with Docker builds on M1 Macs while trying to build Docker images containing Microsoft's ODBC driver for SQL Server. The builds failed with the following error:
+
+```bash
+...
+Unable to locate package msodbcsql17
+...
+The command '/bin/sh -c apt-get update' returned a non-zero code: 100
+```
+
+At the same time, the builds were successful on Intel Macs and CI pipeline, so it was definitely something related to M1 Macs.
+
+## Solution
+
+The problem is caused by the fact that the ODBC driver is not available for ARM64 architecture. The solution is to force Docker to use the x86_64 architecture for the build. There are several ways to do this.
+
+### Update FROM statement in Dockerfile
+
+The first way is to update the `FROM` statement in the Dockerfile to specify the architecture:
+
+```dockerfile
+FROM --platform=linux/amd64 YOUR_BASE_IMAGE
+```
+
+### Set DOCKER_DEFAULT_PLATFORM environment variable
+
+The second way is to set the `DOCKER_DEFAULT_PLATFORM` environment variable to `linux/amd64`:
+
+```bash
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+```
+
+or just set it before the build command:
+
+```bash
+DOCKER_DEFAULT_PLATFORM=linux/amd64 docker build -t myimage .
+```
+
+This environment variable is documented [here](https://docs.docker.com/engine/reference/commandline/cli/#environment-variables).
+
+### Pass --platform flag to docker build command
+
+The third way is to pass the `--platform` flag to the `docker build` command:
+
+```bash
+docker build --platform=linux/amd64 -t myimage .
+```
+
+### Set platform in .docker-compose.yml file
+
+The fourth way is to set the platform in the `.docker-compose.yml` file:
+
+```yaml
+version: '3.8'
+services:
+  myservice:
+    platform: linux/amd64
+    build:
+      context: .
+```
+
+### Use remote build
+
+The fifth way is to use remote build. This is useful if you want to build images for multiple platforms at once. You can read more about it [here](https://github.com/docker/buildx).
+
+## Summary
+
+In this post we looked at how to solve Docker builds fail on M1 Mac with error code 100. We looked at several ways to solve this problem.
+
+The downside of all these solutions is that the builds will be slower because they will be running in emulation mode. In case you need to rebuild images often, you might want to consider using a remote builder VM.

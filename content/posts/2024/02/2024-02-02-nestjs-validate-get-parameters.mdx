@@ -1,0 +1,58 @@
+---
+title: How to validate GET parameters in NestJS
+description: This post will show how to validate GET parameters in NestJS APIs using `class-validator` package and `ValidationPipe`.
+slug: nestjs-validate-get-parameters
+category: backend
+datePublished: 2024-02-02T00:00:00.000Z
+tags: [intermediate, nestjs, nodejs, typescript, backend, api, validation]
+---
+
+This is a short post on how to validate GET parameters in NestJS APIs using `class-validator` package and `ValidationPipe`. We will create a simple API that accepts 2 query parameters and validates them.
+
+## Prerequisites
+
+- NestJS project installed with `nest new` command
+- `class-validator` and `class-transformer` packages installed
+- `ValidationPipe` set up in `main.ts` file
+
+More detailed instructions on how to set up a new NestJS project for this post can be found by [this link](/backend/nestjs-validation-examples#prerequisites)
+
+## Query parameters validation with DTO
+
+First, we need to create a DTO (Data Transfer Object) that will specify the structure of our query parameters and their validation rules. Let's create a new file `src/dto/get-request.dto.ts`:
+
+```typescript
+import { IsString, IsInt, IsNotEmpty } from 'class-validator';
+import { Transform } from 'class-transformer';
+
+export class GetRequestDto {
+  @IsNotEmpty()
+  @IsInt()
+  @Transform(({ value }) => parseInt(value, 10))
+  param1: number;
+
+  @IsNotEmpty()
+  @IsString()
+  param2: string;
+}
+```
+
+We can use this DTO in our `app.controller.ts` now:
+
+```typescript
+import { Query, Controller, Get } from '@nestjs/common';
+import { GetRequestDto } from './dto/get-request.dto';
+
+@Controller()
+export class AppController {
+  @Get('/get')
+  getRequest(@Query() query: GetRequestDto): GetRequestDto {
+    return query;
+  }
+}
+```
+Please mention that we are using `@Query` decorator to get the query parameters and we are passing `GetRequestDto` as a parameter to the `getRequest` method. This will make NestJS to validate the query parameters according to the rules specified in `GetRequestDto` class.
+
+We also need to transform the `param1` value to a number, because query parameters are always strings. We can use `class-transformer` package to do this. We are using `@Transform` decorator to transform the value to a number.
+
+Now, when we make a GET request to `/get` endpoint with query parameters `param1` and `param2`, they will be validated. If the validation fails, NestJS will return a 400 Bad Request response with a detailed error message.

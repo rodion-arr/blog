@@ -1,0 +1,77 @@
+---
+title: How to upload file with JavaScript
+description: A short example of how to upload a file with JavaScript
+slug: upload-file-with-js
+category: js
+datePublished: 2024-02-04T00:00:00.000Z
+tags: [beginner, javascript, files]
+---
+
+Let's review how we can upload a file with JavaScript. We have next conditions:
+
+- On the front-end - we have a single input field. On input `change` event — we want to upload the file to the server.
+- On the back-end - we have an API endpoint that accepts a file in `file` field.
+
+## Solution
+
+HTML:
+```html
+<input type="file" id="file" name="file" />
+```
+
+JavaScript:
+```javascript
+document
+  .getElementById("file")
+  .addEventListener("change", fileUploader);
+
+async function fileUploader(e) {
+  const fileToUpload = e.target.files[0];
+
+  // prepare multi/part form request
+  const formData = new FormData();
+
+  // fields
+  formData.append("file", fileToUpload, fileToUpload.name);
+
+  await fetch("/file-upload-api", {
+    method: "POST",
+    body: formData,
+    headers: {
+      // make sure there is no `Content-Type` header - browser will set it automatically
+    }
+  });
+}
+```
+
+## Explanation
+
+1. We listen to the `change` event on the file input field.
+2. When the event is triggered, we get the file from the input field.
+3. We create a new `FormData` object and append the file to it.
+4. We send a `POST` request to the server with the `FormData` object as the body.
+
+### Why we don't set `Content-Type` header?
+
+In the example above, we don't set the `Content-Type` header. Let's examine the POST request in DevTools.
+
+Headers:
+```http
+POST /file-upload-api HTTP/1.1
+...
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryV4jE7hkOAytnqefk
+...
+```
+
+Payload:
+```http
+------WebKitFormBoundaryV4jE7hkOAytnqefk
+Content-Disposition: form-data; name="file"; filename="wallpaper.webp"
+Content-Type: image/webp
+------WebKitFormBoundaryV4jE7hkOAytnqefk--
+```
+
+If we'll look on `Content-Type` header in the request, we'll see `multipart/form-data` value with MIME boundary included.
+
+It's crucial to not set `Content-Type` header manually because it will not contain full information for the back-end server to correctly parse the request.
+Browser will put boundaries automatically when sending a `FormData` object. So we don't need to set it manually.

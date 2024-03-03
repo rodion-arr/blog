@@ -1,0 +1,124 @@
+---
+title: How to add Swagger docs for APIs returning collections in NestJS
+description: Few examples of typing collections in NestJS Swagger documentation
+slug: nestjs-swagger-typing-collections
+category: backend
+datePublished: 2024-03-03T00:00:00.000Z
+tags: [intermediate, nestjs, nodejs, typescript, backend, api, swagger]
+---
+
+In this post, we will learn how to add Swagger documentation for APIs returning collections in NestJS. We will use `@ApiProperty` decorator to specify the type of the collection and its items.
+
+## Case 1: API returns a collection of objects
+
+Let's say we have an API that returns a collection of objects, normalized by some ID. We can use `@ApiProperty` decorator to specify the type of the collection and its items.
+
+The API response will look like this:
+
+```json
+{
+  "people": {
+    "1": { "name": "John" },
+    "2": { "name": "Doe" }
+  }
+}
+```
+
+First, let's create a simple API that returns a collection of objects. (Here and below imports are omitted for brevity)
+
+```typescript
+export class PeopleController {
+  @Get('case-1')
+  @ApiResponse({
+    type: People,
+  })
+  collectionOfObjects(): People {
+    return {
+      people: {
+        1: { name: 'John' },
+        2: { name: 'Doe' },
+      }
+    }
+  }
+}
+```
+
+We are describing the return type by next DTO class:
+
+```typescript
+@Controller('people')
+export class Person {
+    @ApiProperty()
+    name: string;
+}
+
+@ApiExtraModels(Person)
+export class People {
+    @ApiProperty({
+        type: 'object',
+        properties: { ['PERSON_ID']: { $ref: getSchemaPath(Person) } },
+    })
+    people: Record<string, Person>;
+}
+```
+We described the `People` class with `@ApiProperty` decorator. We specified the type of the collection and its items. We also used `@ApiExtraModels` decorator to specify the extra models that are not directly referenced in the API.
+
+The Swagger documentation for the API will look like this:
+
+![Swagger objects collections](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2024/03/nestjs-swagger-typing-collections/1.png)
+
+## Case 2: API returns a collection of arrays of strings
+
+Let's say we have an API that returns a collection of arrays of strings.
+
+The API response will look like this:
+
+```json
+{
+  "people": {
+    "1": ["John", "Doe"],
+    "2": ["Jane", "Doe"]
+  }
+}
+```
+
+First, let's create a simple API that returns a collection of arrays of strings.
+
+```typescript
+@Controller('people')
+export class CatsController {
+  @Get('case-2')
+  @ApiResponse({
+    type: PeopleArray,
+  })
+  collectionOfArrays(): PeopleArray {
+    return {
+      people: {
+        1: ['John', 'Doe'],
+        2: ['Jane', 'Doe']
+      }
+    }
+  }
+}
+```
+
+We are describing the return type by next DTO class:
+
+```typescript
+export class PeopleArray {
+    @ApiProperty({
+        type: 'object',
+        properties: {
+            ['PEOPLE_GROUP_ID']: {
+                type: 'array',
+                items: { type: 'string' },
+            },
+        },
+    })
+    people: Record<string, string[]>;
+}
+```
+
+The Swagger documentation for the API will look like this:
+
+![Swagger objects collections](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2024/03/nestjs-swagger-typing-collections/2.png)

@@ -34,7 +34,7 @@
     "@types/react-dom": "^18.2.19",
     "@types/throttle-debounce": "^5.0.2",
     "eslint": "^8.57.0",
-    "eslint-config-next": "^14.1.0",
+    "eslint-config-next": "^14.1.1",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-mdx": "^3.1.5",
     "js-yaml": "^4.1.0",

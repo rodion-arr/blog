@@ -1,0 +1,30 @@
+---
+title: HTML <button> element caveat
+description: A short note to remember that the <button> element has a default type of "submit" which can lead to unexpected behavior.
+slug: html-button-element-caveat
+category: css
+datePublished: 2024-03-08T00:00:00.000Z
+tags: [beginner, html]
+---
+
+This is a brief note for the readers to remember that the `<button>` should always have `type` attribute specified.
+
+From my experience, I've seen a lot of cases when `<button>` elements are used without specifying the `type` attribute (mostly when used in React components). This can lead to unexpected behavior when the button is clicked.
+
+The default type of a `<button>` element is `"submit"`. This means that if the button is inside a form, it will submit the form when clicked. This can lead to unexpected behavior if the button is not intended to submit the form.
+
+To avoid this, always specify the `type` attribute on the `<button>` element. If the button is not intended to submit the form, use `type="button"`.
+
+```html
+<button type="button">Click me</button>
+```
+
+This will ensure that the button does not submit the form when clicked.
+
+This behavior is documented in the [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#attributes) as well.
+
+> `type`
+> <br />
+> `submit`: The button submits the form data to the server. **<u>This is the default if the attribute is not specified</u>** for buttons associated with a `<form>`, or if the attribute is an empty or invalid value.
+
+Hope this helps! 🚀

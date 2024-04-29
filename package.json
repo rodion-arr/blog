@@ -20,7 +20,7 @@
     "disqus-react": "^1.1.5",
     "lunr": "^2.3.9",
     "next": "^14.2.3",
-    "react": "18.2.0",
+    "react": "18.3.1",
     "react-dom": "18.2.0",
     "throttle-debounce": "^5.0.0"
   },
@@ -30,7 +30,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/lunr": "^2.3.7",
     "@types/node": "^20.11.20",
-    "@types/react": "^18.2.58",
+    "@types/react": "^18.3.1",
     "@types/react-dom": "^18.2.25",
     "@types/throttle-debounce": "^5.0.2",
     "eslint": "^8.57.0",

@@ -9,6 +9,45 @@ tags: [intermediate, nestjs, nodejs, typescript, backend, api, swagger]
 
 In this post, we will learn how to add Swagger documentation for APIs returning collections in NestJS. We will use `@ApiProperty` decorator to specify the type of the collection and its items.
 
+## UPDATE: NestJS v11
+
+After NestJS v11 upgrade - using `$ref` property will cause a TypeScript error:
+
+```typescript
+@ApiProperty({
+    type: 'object',
+    properties: { ['PERSON_ID']: { $ref: getSchemaPath(Person) } }, // $ref is causing type error
+})
+```
+
+We have 2 options to solve this:
+
+1. Use `additionalProperties` instead of `properties` field:
+
+```typescript
+@ApiProperty({
+    type: 'object',
+    additionalProperties: {
+      allOf: [{ $ref: getSchemaPath(Person) }],
+    },
+})
+```
+
+This fixes the type error. The downside here is that instead of having an explanatory key of `'PERSON_ID'` in the Swagger example - we will have `additionalProperty1`, `additionalProperty2` and `additionalProperty3` keys with `Person` object in each key, which looks pretty overloaded, but type-safe.
+
+2. Continue using original approach with `@ts-expect-error` comment:
+
+`$ref` field is still part of `ReferenceObject` type from Open API spec. It is just [omitted](https://github.com/nestjs/swagger/blob/9b2918e00dc1af7b9473438deccd138e4d111673/lib/interfaces/schema-object-metadata.interface.ts#L11C53-L11C63) on the the `@nestjs/swagger` package level.
+So original approach is still working. For those who accept `@ts-expect-error` comments in their projects - we can stick to original variant:
+
+```typescript
+@ApiProperty({
+    type: 'object',
+    // @ts-expect-error $ref is existing field in SchemaObject
+    properties: { ['PERSON_ID']: { $ref: getSchemaPath(Person) } },
+})
+```
+
 ## Case 1: API returns a collection of objects
 
 Let's say we have an API that returns a collection of objects, normalized by some ID. We can use `@ApiProperty` decorator to specify the type of the collection and its items.
@@ -37,8 +76,8 @@ export class PeopleController {
       people: {
         1: { name: 'John' },
         2: { name: 'Doe' },
-      }
-    }
+      },
+    };
   }
 }
 ```
@@ -48,19 +87,20 @@ We are describing the return type by next DTO class:
 ```typescript
 @Controller('people')
 export class Person {
-    @ApiProperty()
-    name: string;
+  @ApiProperty()
+  name: string;
 }
 
 @ApiExtraModels(Person)
 export class People {
-    @ApiProperty({
-        type: 'object',
-        properties: { ['PERSON_ID']: { $ref: getSchemaPath(Person) } },
-    })
-    people: Record<string, Person>;
+  @ApiProperty({
+    type: 'object',
+    properties: { ['PERSON_ID']: { $ref: getSchemaPath(Person) } },
+  })
+  people: Record<string, Person>;
 }
 ```
+
 We described the `People` class with `@ApiProperty` decorator. We specified the type of the collection and its items. We also used `@ApiExtraModels` decorator to specify the extra models that are not directly referenced in the API.
 
 The Swagger documentation for the API will look like this:
@@ -95,9 +135,9 @@ export class CatsController {
     return {
       people: {
         1: ['John', 'Doe'],
-        2: ['Jane', 'Doe']
-      }
-    }
+        2: ['Jane', 'Doe'],
+      },
+    };
   }
 }
 ```
@@ -106,16 +146,16 @@ We are describing the return type by next DTO class:
 
 ```typescript
 export class PeopleArray {
-    @ApiProperty({
-        type: 'object',
-        properties: {
-            ['PEOPLE_GROUP_ID']: {
-                type: 'array',
-                items: { type: 'string' },
-            },
-        },
-    })
-    people: Record<string, string[]>;
+  @ApiProperty({
+    type: 'object',
+    properties: {
+      ['PEOPLE_GROUP_ID']: {
+        type: 'array',
+        items: { type: 'string' },
+      },
+    },
+  })
+  people: Record<string, string[]>;
 }
 ```
 

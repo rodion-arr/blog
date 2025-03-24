@@ -19,7 +19,7 @@
     "classnames": "^2.5.1",
     "disqus-react": "^1.1.5",
     "lunr": "^2.3.9",
-    "next": "^14.2.3",
+    "next": "^14.2.5",
     "react": "18.3.1",
     "react-dom": "18.2.0",
     "throttle-debounce": "^5.0.0"

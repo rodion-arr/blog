@@ -13,7 +13,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params: { tag } }: RouteParams): Promise<Metadata> {
+export async function generateMetadata({ params }: RouteParams): Promise<Metadata> {
+  const { tag } = await params;
+
   const title = `${SITE_NAME} | Tag: ${tag}`;
   const description = `Articles tagged by ${tag}`;
 
@@ -32,7 +34,9 @@ export const viewport: Viewport = {
 };
 
 export default async function Page({ params }: RouteParams) {
-  const posts = await DbService.getPostsByTag(params.tag);
+  const { tag } = await params;
 
-  return <Category title={`Tag: ${params.tag}`} posts={posts} />;
+  const posts = await DbService.getPostsByTag(tag);
+
+  return <Category title={`Tag: ${tag}`} posts={posts} />;
 }

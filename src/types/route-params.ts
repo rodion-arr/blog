@@ -1,7 +1,7 @@
 export type RouteParams = {
-  params: {
+  params: Promise<{
     category: string;
     post: string;
     tag: string;
-  };
+  }>;
 };

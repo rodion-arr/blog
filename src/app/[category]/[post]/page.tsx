@@ -19,7 +19,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: RouteParams): Promise<Metadata> {
-  const post = await DbService.getPost(params.post);
+  const { post: postParam } = await params;
+  const post = await DbService.getPost(postParam);
 
   if (!post) {
     notFound();
@@ -42,8 +43,10 @@ export const viewport: Viewport = {
 };
 
 export default async function Page({ params }: RouteParams) {
-  const category = DbService.getCategoryBySlug(params.category);
-  const post = await DbService.getPost(params.post);
+  const { post: postParam, category: categoryParam } = await params;
+
+  const category = DbService.getCategoryBySlug(categoryParam);
+  const post = await DbService.getPost(postParam);
 
   if (!category || !post) {
     return null;

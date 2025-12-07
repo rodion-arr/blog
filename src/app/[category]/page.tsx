@@ -15,7 +15,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: RouteParams): Promise<Metadata> {
-  const category = DbService.getCategoryBySlug(params.category);
+  const { category: categoryParam } = await params;
+  const category = DbService.getCategoryBySlug(categoryParam);
 
   if (!category) {
     notFound();
@@ -38,7 +39,8 @@ export const viewport: Viewport = {
 };
 
 export default async function Page({ params }: RouteParams) {
-  const category = DbService.getCategoryBySlug(params.category);
+  const { category: categoryParam } = await params;
+  const category = DbService.getCategoryBySlug(categoryParam);
 
   if (!category) {
     return null;

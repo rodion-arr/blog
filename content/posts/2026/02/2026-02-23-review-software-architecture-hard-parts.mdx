@@ -1,0 +1,43 @@
+---
+title: 'Book review: "Software Architecture: The Hard Parts"'
+description: 'My review for book "Software Architecture: The Hard Parts: Modern Trade-Off Analyses for Distributed Architectures" by Neal Ford, Mark Richards, Pramod Sadalage, Zhamak Dehghani.'
+slug: review-software-architecture-hard-parts
+category: misc
+datePublished: 2026-02-23T00:00:00.000Z
+tags: [advanced, book-review]
+---
+
+![Software Architecture: The Hard Parts - Cover](https://raw.githubusercontent.com/rodion-arr/blog/main/content/images/2026/02/review-software-architecture-hard-parts/cover.jpg)
+
+## Properties of the book
+
+- Full name: Software Architecture: The Hard Parts: Modern Trade-Off Analyses for Distributed Architectures
+- Authors: Neal Ford, Mark Richards, Pramod Sadalage, Zhamak Dehghani
+- ISBN: 1492086894
+- Publisher: O'Reilly Media
+- Publication Date: 2021-09-23
+- Pages: 440
+
+## Overview
+
+This book takes a journey of analyzing ongoing problems of a monolithic system and gradually shows decisions and proofs of how this system will benefit after splitting it into microservices. The authors don't offer "best practices" but instead provide a framework for making weighted architectural decisions based on specific context and trade-offs. Software architecture is presented in service of data, and the book emphasizes that every architectural decision involves trade-offs that must be carefully analyzed.
+
+## Organization
+
+The book consists of 3 main parts:
+
+- **Part I: Pulling Things Apart** covers the fundamentals of decomposition. It explains architectural coupling, modularity, and decomposition strategies. Topics include component-based decomposition patterns, tactical forking, and approaches for splitting databases and operational data. The section also addresses how to determine service granularity by analyzing decomposition drivers like scalability, fault tolerance, and change control.
+- **Part II: Putting Things Back Together** focuses on integration patterns after decomposition. It covers reuse patterns, data ownership and distributed transactions, distributed data access, managing distributed workflows, transactional sagas, contracts (strict vs loose), and managing analytical data. The book presents various pattern combinations for architectural trade-off analysis, examining synchronous vs asynchronous communication, atomic vs eventual consistency, and orchestrated vs choreographed coordination.
+- **Part III: Modern Trade-Off Analysis** provides techniques for building your own trade-off analysis framework. It teaches how to find entangled parts, analyze coupling, and assess trade-offs by determining the impact of change on interdependent systems.
+
+## Who is this book for?
+
+This book is for engineers who want to understand in a deep way the backstage decisions they can make for splitting an app into microservices and what patterns are available to achieve this. It's designed for architects and senior developers who face complex migration decisions and need practical frameworks for analyzing trade-offs in distributed architectures. The book assumes familiarity with software architecture concepts and is not intended for beginners.
+
+## Final Thoughts
+
+The book organizes patterns and available approaches for improving existing system architecture. It begins with analyzing existing app problems, the process of making tech decisions for moving to microservices architecture, and examples of ADR documents for documenting architectural decisions. The authors demonstrate how to approach management and explain why microservices will solve system problems by using concrete trade-off analysis.
+
+The book features the "Sysops Squad Saga" — a fictional story format where chapters include meeting discussions when a team discusses specific issues and produces ADR documents. This narrative approach nicely complements pure technical pattern descriptions by showing real-world decision-making processes.
+
+This book doesn't try to convince you that microservices are always the answer. Instead, it equips you with analytical tools to make informed decisions about when and how to decompose systems, and more importantly, how to evaluate the consequences of those decisions.

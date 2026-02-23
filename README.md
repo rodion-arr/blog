@@ -1,4 +1,4 @@
 # Blog
 My blog about software development
 
-https://rodion-blog.tech/
+https://rodion-blog.pp.ua
